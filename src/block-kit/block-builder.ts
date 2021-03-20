@@ -1,4 +1,4 @@
-import { PlainTextElement, Overflow, Datepicker, Select, StaticSelect, MultiSelect, ImageElement, ContextBlock, SectionBlock, Option, DividerBlock, Action, ActionsBlock, Button, InputBlock, PlainTextInput, ExternalSelect, MrkdwnElement } from '@slack/bolt/node_modules/@slack/types'
+import { PlainTextElement, Overflow, Datepicker, Select, StaticSelect, MultiSelect, ImageElement, ContextBlock, SectionBlock, Option, DividerBlock, Action, ActionsBlock, Button, InputBlock, PlainTextInput, ExternalSelect, MrkdwnElement } from '@slack/types'
 
 export function plainTextElement(text: string): PlainTextElement {
     return {
@@ -86,8 +86,8 @@ export function actionStaticSelect(placeholder: string, actionID: string, option
     }
 }
 
-export function actionSelectExternal(placeholder: string, actionID: string, initialOption?: string) : ExternalSelect {
-    const payload: ExternalSelect =  {
+export function actionSelectExternal(placeholder: string, actionID: string, initialOption?: string): ExternalSelect {
+    const payload: ExternalSelect = {
         // eslint-disable-next-line @typescript-eslint/camelcase
         action_id: actionID,
         type: "external_select",
@@ -138,7 +138,7 @@ export function section(text: string): SectionBlock {
 }
 
 export function sectionWithAccessory(text: string, accessory: Button | Overflow | Datepicker | Select | MultiSelect | Action | ImageElement, blockID?: string): SectionBlock {
-    const payload: SectionBlock =  {
+    const payload: SectionBlock = {
         type: "section",
         text: {
             type: "mrkdwn",
@@ -159,9 +159,9 @@ export function sectionWithExternalSelect(text: string, externalSelect: External
     return sectionWithAccessory(text, externalSelect, blockID)
 }
 
-export function sectionWithImage(text:string, imageURL: string, altText: string): SectionBlock {
+export function sectionWithImage(text: string, imageURL: string, altText: string): SectionBlock {
     // eslint-disable-next-line @typescript-eslint/camelcase
-    return sectionWithAccessory(text, { type : 'image', image_url: imageURL, alt_text: altText});
+    return sectionWithAccessory(text, { type: 'image', image_url: imageURL, alt_text: altText });
 }
 
 export function sectionWithOverflow(text: string, options: Option[], actionID: string): SectionBlock {
@@ -186,7 +186,7 @@ export function sectionWithFields(fields: string[]): SectionBlock {
     }
     return {
         type: "section",
-        fields: fieldBlocks 
+        fields: fieldBlocks
     }
 }
 
@@ -201,14 +201,14 @@ export function sectionWithButton(text: string, button: Button, blockID?: string
     return payload;
 }
 
-export function plainTextInput(title: string, actionID: string, placeholder = ' ', multiline = false, initialValue?: string):  InputBlock {
+export function plainTextInput(title: string, actionID: string, placeholder = ' ', multiline = false, initialValue?: string): InputBlock {
 
     const element: PlainTextInput = {
         type: 'plain_text_input',
         multiline,
         // eslint-disable-next-line @typescript-eslint/camelcase
         action_id: actionID,
-        placeholder : {
+        placeholder: {
             type: 'plain_text',
             text: placeholder
         }

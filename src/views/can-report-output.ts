@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { section, divider, context } from '../block-kit/block-builder';
-import { KnownBlock } from '@slack/bolt/node_modules/@slack/types'
+import { KnownBlock } from '@slack/types'
 
 export default {
   blocks: (authorID: string, conditions: string, actions: string, needs: string, nextReportTime: string, channelID: string): KnownBlock[] => {

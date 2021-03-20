@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { section, plainTextInput, plainTextElement, option, actionStaticSelect, inputBlock } from '../block-kit/block-builder';
-import { View } from '@slack/bolt/node_modules/@slack/types'
+import { View } from '@slack/types'
 
 export default {
   display: (privateMetadata: string): View => {

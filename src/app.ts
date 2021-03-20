@@ -7,7 +7,7 @@ import { App } from '@slack/bolt'
 import canReportModal from './views/can-report-modal';
 import canReportOutput from './views/can-report-output';
 
-import { WebAPICallResult } from '@slack/bolt/node_modules/@slack/web-api/dist/WebClient'
+import { WebAPICallResult } from '@slack/web-api'
 
 const botToken = process.env.BOT_TOKEN;
 
@@ -46,7 +46,7 @@ const incidentResponders = [
     "UEC3Z2JKS"
 ]
 
-app.command(`/incident-declare`, ({ command, ack }) => {
+app.command(`/incident-declare`, async ({ command, ack }) => {
     ack();
     const todaysDate = new Date();
     app.client.conversations.create({
@@ -76,7 +76,7 @@ app.command(`/incident-declare`, ({ command, ack }) => {
     });
 });
 
-app.command(`/incident-can-report`, ({ command, ack, say }) => {
+app.command(`/incident-can-report`, async ({ command, ack, say }) => {
     ack();
     if (!command.channel_name.startsWith('incd')) {
         say('Sorry, you should only do CAN reports in an incident channel!');
@@ -119,6 +119,6 @@ app.view({callback_id: 'can-report-modal', type: 'view_submission'}, async ({ ac
 
 (async (): Promise<void> => {
     // Start your app
-    await app.start(process.env.PORT || 3000);
+    await app.start(3000);
     console.log('IncidentBot is ready and waiting...');
 })();
