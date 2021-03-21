@@ -1,19 +1,21 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import dotenv from 'dotenv';
-dotenv.config();
+import { App, LogLevel, ExpressReceiver } from '@slack/bolt'
 
-import { App } from '@slack/bolt'
-
-import canReportModal from './views/can-report-modal';
-import canReportOutput from './views/can-report-output';
+import canReportModal from './slack/views/can-report-modal';
+import canReportOutput from './slack/views/can-report-output';
 
 import { WebAPICallResult } from '@slack/web-api'
 
-const botToken = process.env.BOT_TOKEN;
+import { env } from './env'
+
+
+const receiver = new ExpressReceiver({ signingSecret: env.SLACK_SIGNING_SECRET });
+const botToken = env.SLACK_BOT_TOKEN;
 
 const app = new App({
-    signingSecret: process.env.SIGNING_SECRET,
-    token: botToken
+    signingSecret: env.SLACK_SIGNING_SECRET,
+    token: botToken,
+    logLevel: LogLevel.DEBUG,
+    receiver
 });
 
 interface ModalStatePayload {
@@ -42,9 +44,17 @@ interface ChatPostMessagePayload extends WebAPICallResult {
 }
 
 const incidentResponders = [
-    "U9UFK54EA",
-    "UEC3Z2JKS"
+    "UBMS9SGUC"
 ]
+
+interface messageInterface {
+    message?:any;
+    say?:any;
+}
+
+app.message('hey', async ({ message, say }:messageInterface) => {
+    await say(`Hello, <@${message.user}>`);
+});
 
 app.command(`/incident-declare`, async ({ command, ack }) => {
     ack();
@@ -60,11 +70,11 @@ app.command(`/incident-declare`, async ({ command, ack }) => {
         const channel = channelCreateResult.channel as ChannelPayload;
         incidentResponders.push(command.user_id);
         if (channel.id) {
-            if(process.env.INCIDENT_BROADCAST_CHANNEL) {
+            if (env.SLACK_INCIDENT_BROADCAST_CHANNEL) {
                 app.client.chat.postMessage({
                     token: botToken,
                     text: `An incident has been declared. Follow along at <#${channel.id}>`,
-                    channel: process.env.INCIDENT_BROADCAST_CHANNEL
+                    channel: env.SLACK_INCIDENT_BROADCAST_CHANNEL
                 });
             }
             app.client.conversations.invite({
@@ -93,7 +103,7 @@ app.command(`/incident-can-report`, async ({ command, ack, say }) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/camelcase
-app.view({callback_id: 'can-report-modal', type: 'view_submission'}, async ({ ack, body }) => {
+app.view({ callback_id: 'can-report-modal', type: 'view_submission' }, async ({ ack, body }) => {
     ack();
     const responses = (body.view.state as ModalStatePayload).values;
     const canReport = await app.client.chat.postMessage({
@@ -117,8 +127,13 @@ app.view({callback_id: 'can-report-modal', type: 'view_submission'}, async ({ ac
     });
 });
 
+receiver.router.get('/secret-page', (_, res) => {
+    // You're working with an express req and res now.
+    res.send('yay!');
+  });
+
 (async (): Promise<void> => {
     // Start your app
-    await app.start(3000);
+    await app.start(env.HTTP_PORT);
     console.log('IncidentBot is ready and waiting...');
 })();
