@@ -4,6 +4,7 @@ import { WebAPICallResult } from '@slack/web-api'
 import canReportModal from './slack/views/can-report-modal';
 import canReportOutput from './slack/views/can-report-output';
 import receiver from './notSlack/routes'
+import messageListener from './slack/actions/messageListener'
 
 import { env } from './env'
 
@@ -46,14 +47,7 @@ const incidentResponders = [
     "UBMS9SGUC"
 ]
 
-interface MessageInterface {
-    message?:any;
-    say?:any;
-}
-
-app.message('hey', async ({ message, say }:MessageInterface) => {
-    await say(`Hello, <@${message.user}>`);
-});
+messageListener(app);
 
 app.command(`/incident-declare`, async ({ command, ack }) => {
     ack();
