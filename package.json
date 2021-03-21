@@ -9,6 +9,7 @@
   "scripts": {
     "test": "nyc mocha -r ts-node/register src/**/*.spec.ts",
     "lint": "eslint . --ext .ts",
+    "prettier": "prettier --write 'src/**/*.ts'",
     "start": "node build/app.js",
     "build": "tsc",
     "prebuild": "npm run clean",
