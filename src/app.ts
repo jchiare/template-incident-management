@@ -1,14 +1,13 @@
-import { App, LogLevel, ExpressReceiver } from '@slack/bolt'
+import { App, LogLevel } from '@slack/bolt'
+import { WebAPICallResult } from '@slack/web-api'
 
 import canReportModal from './slack/views/can-report-modal';
 import canReportOutput from './slack/views/can-report-output';
-
-import { WebAPICallResult } from '@slack/web-api'
+import receiver from './notSlack/routes'
 
 import { env } from './env'
 
 
-const receiver = new ExpressReceiver({ signingSecret: env.SLACK_SIGNING_SECRET });
 const botToken = env.SLACK_BOT_TOKEN;
 
 const app = new App({
@@ -126,11 +125,6 @@ app.view({ callback_id: 'can-report-modal', type: 'view_submission' }, async ({ 
         timestamp: canReport.ts
     });
 });
-
-receiver.router.get('/secret-page', (_, res) => {
-    // You're working with an express req and res now.
-    res.send('yay!');
-  });
 
 (async (): Promise<void> => {
     // Start your app
