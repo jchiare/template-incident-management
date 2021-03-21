@@ -47,12 +47,12 @@ const incidentResponders = [
     "UBMS9SGUC"
 ]
 
-interface messageInterface {
+interface MessageInterface {
     message?:any;
     say?:any;
 }
 
-app.message('hey', async ({ message, say }:messageInterface) => {
+app.message('hey', async ({ message, say }:MessageInterface) => {
     await say(`Hello, <@${message.user}>`);
 });
 
@@ -134,6 +134,6 @@ receiver.router.get('/secret-page', (_, res) => {
 
 (async (): Promise<void> => {
     // Start your app
-    await app.start(env.HTTP_PORT);
+    await app.start(+env.HTTP_PORT);
     console.log('IncidentBot is ready and waiting...');
 })();

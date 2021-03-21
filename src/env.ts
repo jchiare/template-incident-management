@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const env = {
-    SLACK_BOT_TOKEN: <string> process.env.SLACK_BOT_TOKEN,
-    SLACK_SIGNING_SECRET:  <string> process.env.SIGNING_SECRET,
-    SLACK_INCIDENT_BROADCAST_CHANNEL: <string> process.env.INCIDENT_BROADCAST_CHANNEL,
-    HTTP_PORT: +<string> process.env.HTTP_PORT,
+    SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN as string,
+    SLACK_SIGNING_SECRET: process.env.SIGNING_SECRET as string,
+    SLACK_INCIDENT_BROADCAST_CHANNEL: process.env.INCIDENT_BROADCAST_CHANNEL as string,
+    HTTP_PORT: process.env.HTTP_PORT as string,
 };  

@@ -5,5 +5,13 @@
         "prettier",
         "prettier/@typescript-eslint"
     ],
+    "overrides": [
+        {
+            "files": ["*"],
+            "rules": {
+                "@typescript-eslint/no-explicit-any": "off"
+            }
+        }
+    ], 
     "plugins": ["@typescript-eslint"]
-  }
+}
