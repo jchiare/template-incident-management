@@ -1,10 +1,10 @@
 import { App, LogLevel } from "@slack/bolt";
 import { WebAPICallResult } from "@slack/web-api";
 
-import canReportModal from "./slack/views/can-report-modal";
 import canReportOutput from "./slack/views/can-report-output";
 import receiver from "./notSlack/routes";
 import messageListener from "./slack/actions/messageListener";
+import commandListener from "./slack/actions/commandListener";
 
 import { env } from "./env";
 
@@ -31,74 +31,18 @@ interface ModalStatePayload {
   };
 }
 
-interface ChannelPayload {
-  id: string;
-  name: string;
-}
-
 interface ChatPostMessagePayload extends WebAPICallResult {
   channel: string;
   ts: string;
   message: object;
 }
 
-const incidentResponders = ["UBMS9SGUC"];
-
 messageListener(app);
 
-app.command(`/incident-declare`, async ({ command, ack }) => {
-  ack();
-  const todaysDate = new Date();
-  app.client.conversations
-    .create({
-      token: botToken,
-      name: `incd-${todaysDate.getFullYear()}-${todaysDate.getMonth() +
-        1}-${todaysDate.getDate()}-${Math.floor(Math.random() * (999 - 1))}`
-    })
-    .then(channelCreateResult => {
-      if (channelCreateResult.error) {
-        console.error(channelCreateResult.error);
-        return;
-      }
-      const channel = channelCreateResult.channel as ChannelPayload;
-      incidentResponders.push(command.user_id);
-      if (channel.id) {
-        if (env.SLACK_INCIDENT_BROADCAST_CHANNEL) {
-          app.client.chat.postMessage({
-            token: botToken,
-            text: `An incident has been declared. Follow along at <#${channel.id}>`,
-            channel: env.SLACK_INCIDENT_BROADCAST_CHANNEL
-          });
-        }
-        app.client.conversations.invite({
-          token: botToken,
-          channel: channel.id,
-          users: incidentResponders.join(",")
-        });
-      }
-    });
-});
+commandListener(app);
 
-app.command(`/incident-can-report`, async ({ command, ack, say }) => {
-  ack();
-  if (!command.channel_name.startsWith("incd")) {
-    say("Sorry, you should only do CAN reports in an incident channel!");
-    return;
-  }
-  app.client.views
-    .open({
-      token: botToken,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      trigger_id: command.trigger_id,
-      view: canReportModal.display(command.channel_id)
-    })
-    .catch(error => {
-      console.error(JSON.stringify(error, null, 2));
-    });
-});
-
-
-app.view( // eslint-disable-next-line @typescript-eslint/camelcase
+app.view(
+  // eslint-disable-next-line @typescript-eslint/camelcase
   { callback_id: "can-report-modal", type: "view_submission" },
   async ({ ack, body }) => {
     ack();
