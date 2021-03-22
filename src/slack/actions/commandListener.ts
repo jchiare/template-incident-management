@@ -11,7 +11,7 @@ interface ChannelPayload {
 export default function commandListener(app: App): void {
   const botToken = env.SLACK_BOT_TOKEN;
   const incidentResponders = ["UBMS9SGUC"];
-  
+
   app.command(`/incident-declare`, async ({ command, ack }) => {
     ack();
     const todaysDate = new Date();
