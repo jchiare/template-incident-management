@@ -1,6 +1,8 @@
 import { App } from "@slack/bolt";
 import { WebAPICallResult } from "@slack/web-api";
 
+import { env } from "../../env";
+
 import canReportOutput from "../views/can-report-output";
 
 interface ModalStatePayload {
@@ -24,6 +26,8 @@ interface ChatPostMessagePayload extends WebAPICallResult {
 }
 
 export default function viewListener(app: App): void {
+  const botToken = env.SLACK_BOT_TOKEN;
+
   app.view(
     // eslint-disable-next-line @typescript-eslint/camelcase
     { callback_id: "can-report-modal", type: "view_submission" },
