@@ -6,6 +6,7 @@ import commandListener from "./slack/actions/commandListener";
 import viewListener from "./slack/actions/viewListener";
 
 import { env } from "./env";
+import { logger } from './logger'
 
 const botToken = env.SLACK_BOT_TOKEN;
 
@@ -23,5 +24,5 @@ viewListener(app);
 (async (): Promise<void> => {
   // Start your app
   await app.start(+env.HTTP_PORT);
-  console.log("IncidentBot is ready and waiting...");
+  logger.info(`Started incident response bot on port ${env.HTTP_PORT}`)
 })();
