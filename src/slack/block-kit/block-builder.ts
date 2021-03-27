@@ -210,10 +210,11 @@ export function sectionWithImage(
   imageURL: string,
   altText: string
 ): SectionBlock {
-  // eslint-disable-next-line @typescript-eslint/camelcase
   return sectionWithAccessory(text, {
     type: "image",
+    // eslint-disable-next-line @typescript-eslint/camelcase
     image_url: imageURL,
+    // eslint-disable-next-line @typescript-eslint/camelcase
     alt_text: altText
   });
 }
