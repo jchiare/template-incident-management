@@ -2,6 +2,7 @@ import { App } from "@slack/bolt";
 import { WebAPICallResult } from "@slack/web-api";
 
 import { env } from "../../env";
+import { logger } from "../../logger";
 
 import canReportOutput from "../views/can-report-output";
 
@@ -34,6 +35,7 @@ export default function viewListener(app: App): void {
     async ({ ack, body }) => {
       ack();
       const responses = (body.view.state as ModalStatePayload).values;
+      logger.info(JSON.stringify(responses));
       const canReport = (await app.client.chat.postMessage({
         token: botToken,
         channel: body.view.private_metadata,
