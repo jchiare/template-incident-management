@@ -1,8 +1,7 @@
 import { App, LogLevel } from "@slack/bolt";
 
 import receiver from "./notSlack/routes";
-import messageListener from "./slack/actions/messageListener";
-import { initializeSlackCommands } from "./slack/slackController";
+import { initializeSlackCommands, initializeSlackMessages } from "./slack/slackController";
 import viewListener from "./slack/actions/viewListener";
 
 import { env } from "./env";
@@ -18,7 +17,7 @@ const app = new App({
 });
 
 initializeSlackCommands(app);
-messageListener(app);
+initializeSlackMessages(app);
 viewListener(app);
 
 (async (): Promise<void> => {
